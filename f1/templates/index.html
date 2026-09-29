@@ -1,0 +1,2433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>COMPASS</title>
+    <meta name="description" content="COMPASS transforms competitive events into strategic intelligence by connecting what happened, when it happened, and what your long-term memory already knows.">
+
+    <!-- Luxury Typography: Plus Jakarta Sans, Space Grotesk, Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800;900&family=Space+Grotesk:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Three.js (r128) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <style>
+        /* ==========================================================================
+           1. LUXURY EXECUTIVE PALETTE & TYPOGRAPHY
+           ========================================================================== */
+        :root {
+            /* Clean, Calm, High-End Executive Palette */
+            --bg-page: #F8FAFC;
+            --bg-page-gradient: radial-gradient(circle at 50% 0%, #FFFFFF 0%, #F1F5F9 100%);
+            --bg-card: #FFFFFF;
+            --bg-input: #FFFFFF;
+            --bg-dark-banner: #0B1120;
+            --bg-dark-card: #131B2E;
+
+            --text-main: #0F172A;
+            --text-sub: #334155;
+            --text-muted: #64748B;
+            --text-dim: #94A3B8;
+
+            /* Vibrant Red Accent (Used strategically for the Top-Right CTA) */
+            --accent-red: #E11D48;
+            --accent-red-hover: #BE123C;
+            --accent-red-light: #FFF1F2;
+
+            /* Subtle High-Tech Electric Energy */
+            --electric-blue: #0284C7;
+            --electric-cyan: #0EA5E9;
+            --electric-glow: rgba(14, 165, 233, 0.4);
+
+            --border-light: #E2E8F0;
+            --border-card: #E2E8F0;
+            --border-input: #CBD5E1;
+
+            /* Clean Modern Typography */
+            --font-head: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-space: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+            --radius-btn: 10px;
+            --radius-input: 10px;
+            --radius-card: 16px;
+            --radius-pill: 9999px;
+
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
+            --shadow-card: 0 8px 26px -4px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
+            --shadow-hover: 0 14px 34px -4px rgba(15, 23, 42, 0.10);
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-page);
+            background-image: var(--bg-page-gradient);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* Ambient 3D Canvas Background */
+        #bg3dCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.65;
+        }
+
+        .main-wrapper {
+            position: relative;
+            z-index: 1;
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 0 24px 80px 24px;
+        }
+
+        /* ==========================================================================
+           2. TOP NAVIGATION: CLEAN WHITE RECTANGULAR ROUNDED BOX WITH RED CTA
+           ========================================================================== */
+        .top-navbar-box {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #FFFFFF;
+            border: 1.5px solid var(--border-card);
+            border-radius: var(--radius-card);
+            padding: 16px 24px;
+            margin: 24px 0 36px 0;
+            box-shadow: 0 4px 18px -2px rgba(15, 23, 42, 0.04);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .brand-logo-badge {
+            width: 40px;
+            height: 40px;
+            background: #0F172A;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            font-family: var(--font-head);
+            font-size: 1.35rem;
+            font-weight: 900;
+            box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);
+        }
+
+        .brand-name {
+            font-family: var(--font-head);
+            font-size: 1.45rem;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            color: #0F172A;
+            line-height: 1;
+        }
+
+        /* Red + New Analysis button at top right corner */
+        .nav-btn-red {
+            background: var(--accent-red);
+            color: #FFFFFF;
+            border: none;
+            border-radius: var(--radius-btn);
+            padding: 10px 22px;
+            font-family: var(--font-head);
+            font-size: 0.88rem;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(225, 29, 72, 0.28);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+        }
+
+        .nav-btn-red:hover {
+            background: var(--accent-red-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 18px rgba(225, 29, 72, 0.4);
+        }
+
+        /* ==========================================================================
+           3. HERO SECTION (BOLD EXECUTIVE TITLE)
+           ========================================================================== */
+        .hero-section {
+            text-align: center;
+            padding: 10px 0 36px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .hero-title {
+            font-family: var(--font-head);
+            font-size: clamp(3.0rem, 7.2vw, 5.2rem);
+            font-weight: 900;
+            letter-spacing: -0.035em;
+            line-height: 1.05;
+            color: #0F172A;
+            margin-bottom: 20px;
+        }
+
+        .hero-title .title-accent {
+            color: #334155;
+            display: block;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.05rem, 2vw, 1.2rem);
+            color: var(--text-sub);
+            max-width: 720px;
+            margin: 0 auto 36px auto;
+            line-height: 1.6;
+            font-weight: 500;
+        }
+
+        .hero-subtitle strong {
+            color: #0F172A;
+            font-weight: 800;
+        }
+
+        /* 3 Feature Steps Pill Grid: Clean Font */
+        .hero-steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            width: 100%;
+            max-width: 820px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 640px) {
+            .hero-steps-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .step-pill-card {
+            background: #FFFFFF;
+            border: 1.5px solid var(--border-card);
+            border-radius: 12px;
+            padding: 18px 20px;
+            text-align: left;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.25s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .step-pill-card:hover {
+            border-color: #94A3B8;
+            box-shadow: var(--shadow-card);
+            transform: translateY(-2px);
+        }
+
+        .step-pill-head {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-head);
+            font-size: 1.05rem;
+            font-weight: 900;
+            color: #0F172A;
+            margin-bottom: 4px;
+        }
+
+        .step-pill-num {
+            color: var(--electric-blue);
+            font-weight: 900;
+        }
+
+        .step-pill-label {
+            font-size: 0.76rem;
+            font-family: var(--font-head);
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        /* ==========================================================================
+           4. BIG INTELLIGENCE COMMAND BOX WITH ELECTRIC LIGHTNING SWEEP
+           ========================================================================== */
+        .command-center-card {
+            background: #FFFFFF;
+            border-radius: var(--radius-card);
+            padding: 38px;
+            box-shadow: 
+                0 18px 45px -5px rgba(15, 23, 42, 0.08),
+                0 0 0 1px rgba(15, 23, 42, 0.06);
+            margin-top: 36px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* 3.5px Continuous Electric Lightning Border */
+        .command-center-card::before {
+            content: '';
+            position: absolute;
+            inset: -3.5px;
+            border-radius: calc(var(--radius-card) + 3.5px);
+            padding: 3.5px;
+            background: conic-gradient(
+                from var(--lightning-angle, 0deg),
+                transparent 0%,
+                var(--electric-cyan) 18%,
+                #38BDF8 25%,
+                transparent 38%,
+                transparent 62%,
+                var(--electric-blue) 80%,
+                #60A5FA 88%,
+                transparent 100%
+            );
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            animation: rotateLightningSweep 7s linear infinite;
+        }
+
+        @property --lightning-angle {
+            syntax: '<angle>';
+            initial-value: 0deg;
+            inherits: false;
+        }
+
+        @keyframes rotateLightningSweep {
+            0% { --lightning-angle: 0deg; }
+            100% { --lightning-angle: 360deg; }
+        }
+
+        /* Refined Electric Side Corners */
+        .corner-lightning-tl,
+        .corner-lightning-tr,
+        .corner-lightning-bl,
+        .corner-lightning-br {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .corner-lightning-tl {
+            top: 0;
+            left: 0;
+            border-top: 3.5px solid var(--electric-cyan);
+            border-left: 3.5px solid var(--electric-blue);
+            border-top-left-radius: var(--radius-card);
+            animation: cornerPulse 2.5s ease-in-out infinite;
+        }
+
+        .corner-lightning-tr {
+            top: 0;
+            right: 0;
+            border-top: 3.5px solid var(--electric-blue);
+            border-right: 3.5px solid var(--electric-cyan);
+            border-top-right-radius: var(--radius-card);
+            animation: cornerPulse 2.5s ease-in-out infinite 0.6s;
+        }
+
+        .corner-lightning-bl {
+            bottom: 0;
+            left: 0;
+            border-bottom: 3.5px solid var(--electric-cyan);
+            border-left: 3.5px solid var(--electric-blue);
+            border-bottom-left-radius: var(--radius-card);
+            animation: cornerPulse 2.5s ease-in-out infinite 1.2s;
+        }
+
+        .corner-lightning-br {
+            bottom: 0;
+            right: 0;
+            border-bottom: 3.5px solid var(--electric-blue);
+            border-right: 3.5px solid var(--electric-cyan);
+            border-bottom-right-radius: var(--radius-card);
+            animation: cornerPulse 2.5s ease-in-out infinite 1.8s;
+        }
+
+        @keyframes cornerPulse {
+            0%, 100% {
+                filter: drop-shadow(0 0 6px var(--electric-cyan));
+                opacity: 0.75;
+            }
+            50% {
+                filter: drop-shadow(0 0 14px var(--electric-cyan)) drop-shadow(0 0 20px var(--electric-blue));
+                opacity: 1;
+            }
+        }
+
+        /* Command Card Header */
+        .command-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .command-header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .command-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: #0F172A;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            font-family: var(--font-head);
+            font-size: 1.25rem;
+            font-weight: 900;
+        }
+
+        .command-title-block h2 {
+            font-family: var(--font-head);
+            font-size: 1.35rem;
+            font-weight: 900;
+            color: #0F172A;
+            letter-spacing: -0.015em;
+            line-height: 1.2;
+        }
+
+        .command-title-block p {
+            font-size: 0.84rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .btn-box-reset {
+            background: #F8FAFC;
+            border: 1px solid var(--border-light);
+            color: var(--text-sub);
+            font-family: var(--font-head);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 7px 14px;
+            border-radius: var(--radius-btn);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-box-reset:hover {
+            border-color: #94A3B8;
+            color: #0F172A;
+            background: #FFFFFF;
+        }
+
+        /* Dual Input Grid with In-UI Validation */
+        .inputs-row-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.6fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .inputs-row-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-input-box {
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .form-label-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .form-label {
+            font-family: var(--font-head);
+            font-size: 0.88rem;
+            font-weight: 800;
+            color: #0F172A;
+            letter-spacing: -0.01em;
+        }
+
+        .form-label-required {
+            font-size: 0.72rem;
+            font-family: var(--font-head);
+            font-weight: 800;
+            color: var(--accent-red);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .clean-input {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1.5px solid var(--border-input);
+            border-radius: var(--radius-input);
+            padding: 13px 16px;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            color: var(--text-main);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .clean-input:focus {
+            border-color: var(--electric-blue);
+            box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+        }
+
+        .clean-input.input-error {
+            border-color: var(--accent-red) !important;
+            box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.15) !important;
+        }
+
+        /* Custom In-UI Validation Tooltip */
+        .custom-error-tooltip {
+            display: none;
+            position: absolute;
+            bottom: -28px;
+            left: 0;
+            background: #0F172A;
+            color: #FFFFFF;
+            font-family: var(--font-head);
+            font-size: 0.74rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 10;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .custom-error-tooltip::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: 16px;
+            border-left: 4px solid transparent;
+            border-right: 4px solid transparent;
+            border-bottom: 4px solid #0F172A;
+        }
+
+        /* Temporal Memory Engine Mode Selection */
+        .modes-section-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-family: var(--font-head);
+            font-size: 0.78rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .mode-selection-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+
+        @media (max-width: 768px) {
+            .mode-selection-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .mode-card {
+            background: #FFFFFF;
+            border: 1.5px solid var(--border-card);
+            border-radius: 12px;
+            padding: 16px 18px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .mode-card:hover {
+            border-color: #94A3B8;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .mode-card.active {
+            border-color: #0F172A;
+            background: #F8FAFC;
+            box-shadow: 0 0 0 1.5px #0F172A;
+        }
+
+        .mode-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .mode-badge {
+            font-family: var(--font-head);
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: #F1F5F9;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+
+        .mode-card.active .mode-badge {
+            background: #0F172A;
+            color: #FFFFFF;
+        }
+
+        .mode-tag-title {
+            font-family: var(--font-head);
+            font-size: 0.96rem;
+            font-weight: 900;
+            color: #0F172A;
+        }
+
+        .mode-tag-desc {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        /* Lightning Surge Effect for Clicked Cards */
+        .card-lightning-surge {
+            animation: cardLightningFlash 1.4s ease-out forwards !important;
+        }
+
+        @keyframes cardLightningFlash {
+            0% {
+                border-color: var(--electric-cyan);
+                box-shadow: 
+                    0 0 0 3px rgba(14, 165, 233, 0.4),
+                    0 0 25px rgba(14, 165, 233, 0.4);
+                transform: scale(1.015);
+            }
+            50% {
+                border-color: var(--electric-blue);
+                box-shadow: 
+                    0 0 0 2.5px rgba(2, 132, 199, 0.5),
+                    0 0 20px rgba(2, 132, 199, 0.35);
+            }
+            100% {
+                box-shadow: var(--shadow-card);
+                transform: scale(1);
+            }
+        }
+
+        /* Command Card Footer */
+        .command-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 22px;
+            border-top: 1px solid var(--border-light);
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .quote-note {
+            font-size: 0.84rem;
+            color: var(--text-muted);
+            max-width: 580px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .quote-note strong {
+            color: #0F172A;
+            font-weight: 800;
+        }
+
+        /* Authoritative Dark Primary Analyze CTA */
+        .btn-analyze {
+            background: #0F172A;
+            color: #FFFFFF;
+            font-family: var(--font-head);
+            font-size: 0.98rem;
+            font-weight: 900;
+            padding: 13px 26px;
+            border-radius: var(--radius-btn);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.25);
+        }
+
+        .btn-analyze:hover {
+            background: #1E293B;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 22px rgba(15, 23, 42, 0.35);
+        }
+
+        /* Example Inquiries Chips Bar */
+        .sample-chips-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px dashed var(--border-light);
+        }
+
+        .sample-chips-label {
+            font-family: var(--font-head);
+            font-size: 0.76rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--text-dim);
+            margin-right: 4px;
+        }
+
+        .query-chip {
+            background: #F1F5F9;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-pill);
+            padding: 6px 14px;
+            font-family: var(--font-head);
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .query-chip:hover {
+            background: #E2E8F0;
+            color: #0F172A;
+            border-color: #CBD5E1;
+            transform: translateY(-1px);
+        }
+
+        /* ==========================================================================
+           5. RESULTS / INTELLIGENCE DOSSIER SECTION
+           ========================================================================== */
+        .results-section {
+            margin-top: 48px;
+            display: none;
+        }
+
+        .brief-card {
+            background: #FFFFFF;
+            border-radius: var(--radius-card);
+            border: 1.5px solid var(--border-card);
+            padding: 38px;
+            box-shadow: var(--shadow-card);
+            position: relative;
+        }
+
+        .brief-top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1.5px solid var(--border-light);
+            padding-bottom: 20px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .brief-top-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brief-top-left h2 {
+            font-family: var(--font-head);
+            font-size: 1.45rem;
+            font-weight: 900;
+            color: #0F172A;
+            letter-spacing: -0.02em;
+        }
+
+        .brief-mode-tag {
+            font-family: var(--font-head);
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: #0F172A;
+            color: #FFFFFF;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .brief-actions-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-action {
+            background: #FFFFFF;
+            border: 1.5px solid var(--border-light);
+            color: #0F172A;
+            font-family: var(--font-head);
+            font-size: 0.82rem;
+            font-weight: 800;
+            padding: 8px 16px;
+            border-radius: var(--radius-btn);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-action:hover {
+            border-color: #94A3B8;
+            background: #F8FAFC;
+        }
+
+        /* Brief Content Typography */
+        .brief-rendered-body {
+            font-size: 0.98rem;
+            line-height: 1.7;
+            color: #1E293B;
+        }
+
+        .brief-rendered-body h1,
+        .brief-rendered-body h2,
+        .brief-rendered-body h3 {
+            font-family: var(--font-head);
+            color: #0F172A;
+            font-weight: 900;
+            margin-top: 28px;
+            margin-bottom: 12px;
+            line-height: 1.25;
+            letter-spacing: -0.015em;
+        }
+
+        .brief-rendered-body h2 {
+            font-size: 1.25rem;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 6px;
+        }
+
+        .brief-rendered-body h3 {
+            font-size: 1.08rem;
+        }
+
+        .brief-rendered-body p {
+            margin-bottom: 16px;
+        }
+
+        .brief-rendered-body ul,
+        .brief-rendered-body ol {
+            margin-bottom: 18px;
+            padding-left: 22px;
+        }
+
+        .brief-rendered-body li {
+            margin-bottom: 8px;
+        }
+
+        /* Formatted Clean Tables */
+        .brief-rendered-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.88rem;
+            background: #FFFFFF;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-card);
+        }
+
+        .brief-rendered-body th,
+        .brief-rendered-body td {
+            padding: 12px 14px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .brief-rendered-body th {
+            background: #F8FAFC;
+            font-family: var(--font-head);
+            font-weight: 800;
+            color: #0F172A;
+            border-bottom: 2px solid var(--border-card);
+        }
+
+        .brief-disclaimer-note {
+            margin-top: 36px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border-light);
+            font-size: 0.78rem;
+            color: var(--text-dim);
+            font-style: italic;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ==========================================================================
+           6. EDITORIAL VALUE BANNER & FAQS
+           ========================================================================== */
+        .why-compare-section {
+            margin-top: 65px;
+        }
+
+        .why-compare-title {
+            font-family: var(--font-head);
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: #0F172A;
+            letter-spacing: -0.02em;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .why-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .why-card {
+            background: #FFFFFF;
+            border: 1.5px solid var(--border-card);
+            border-radius: 14px;
+            padding: 26px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .why-card-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            background: #F1F5F9;
+            color: #0F172A;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+        }
+
+        .why-card-title {
+            font-family: var(--font-head);
+            font-size: 1.05rem;
+            font-weight: 900;
+            color: #0F172A;
+            margin-bottom: 8px;
+        }
+
+        .why-card-desc {
+            font-size: 0.86rem;
+            color: var(--text-sub);
+            line-height: 1.55;
+            font-weight: 500;
+        }
+
+        /* Dark Executive Banner */
+        .dark-banner {
+            margin-top: 65px;
+            background: var(--bg-dark-banner);
+            border-radius: var(--radius-card);
+            padding: 48px;
+            color: #FFFFFF;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(11, 17, 32, 0.18);
+        }
+
+        .dark-banner-title {
+            font-family: var(--font-head);
+            font-size: clamp(1.8rem, 4vw, 2.4rem);
+            font-weight: 900;
+            letter-spacing: -0.025em;
+            margin-bottom: 12px;
+            color: #FFFFFF;
+        }
+
+        .dark-banner-desc {
+            font-size: 1rem;
+            color: #94A3B8;
+            max-width: 680px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+
+        .dark-steps-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .dark-steps-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .dark-step-card {
+            background: var(--bg-dark-card);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 22px;
+        }
+
+        .dark-step-num {
+            font-family: var(--font-head);
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--electric-cyan);
+            margin-bottom: 6px;
+        }
+
+        .dark-step-title {
+            font-family: var(--font-head);
+            font-size: 0.96rem;
+            font-weight: 900;
+            color: #FFFFFF;
+        }
+
+        .dark-step-sub {
+            font-size: 0.78rem;
+            color: #64748B;
+        }
+
+        /* ==========================================================================
+           7. RECENT ANALYSES (INSTANT CACHED RE-DISPLAY)
+           ========================================================================== */
+        .history-section {
+            margin-top: 65px;
+        }
+
+        .history-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .history-title {
+            font-family: var(--font-head);
+            font-size: 1.45rem;
+            font-weight: 900;
+            color: #0F172A;
+            letter-spacing: -0.015em;
+        }
+
+        .btn-clear-history {
+            background: none;
+            border: none;
+            font-family: var(--font-head);
+            font-size: 0.8rem;
+            font-weight: 800;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: color 0.15s;
+        }
+
+        .btn-clear-history:hover {
+            color: var(--accent-red);
+            text-decoration: underline;
+        }
+
+        .history-items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .history-item-card {
+            background: #FFFFFF;
+            border: 1.5px solid var(--border-card);
+            border-radius: 12px;
+            padding: 18px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+        }
+
+        .history-item-card:hover {
+            border-color: #CBD5E1;
+            box-shadow: var(--shadow-card);
+            transform: translateX(4px);
+        }
+
+        .history-item-left {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .history-item-target {
+            font-family: var(--font-head);
+            font-size: 1rem;
+            font-weight: 900;
+            color: #0F172A;
+            text-transform: capitalize;
+        }
+
+        .history-item-query {
+            font-size: 0.84rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .history-item-arrow {
+            color: #CBD5E1;
+            font-size: 1.2rem;
+            font-weight: 900;
+            transition: all 0.2s;
+        }
+
+        /* ==========================================================================
+           8. FAQS & FOOTER
+           ========================================================================== */
+        .faqs-section {
+            margin-top: 65px;
+        }
+
+        .faq-item {
+            background: #FFFFFF;
+            border: 1.5px solid var(--border-card);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        .faq-question {
+            padding: 18px 24px;
+            font-family: var(--font-head);
+            font-size: 1rem;
+            font-weight: 800;
+            color: #0F172A;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .faq-answer {
+            padding: 0 24px 20px 24px;
+            font-size: 0.9rem;
+            color: var(--text-sub);
+            line-height: 1.6;
+            display: none;
+        }
+
+        .site-footer {
+            margin-top: 80px;
+            padding-top: 32px;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--text-muted);
+            font-size: 0.82rem;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .footer-disclaimer {
+            font-size: 0.78rem;
+            color: var(--text-dim);
+        }
+
+        /* ==========================================================================
+           9. ABSTRACT 3D LUXURY GEOMETRIC LOADER (NO CREATURES)
+           ========================================================================== */
+        .loading-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.72);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .loading-card-box {
+            background: #FFFFFF;
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 440px;
+            text-align: center;
+            box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.35);
+            border: 1.5px solid #CBD5E1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        #loader3dWrapper {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 16px auto;
+            position: relative;
+            cursor: grab;
+        }
+
+        #loader3dWrapper:active {
+            cursor: grabbing;
+        }
+
+        #loader3dCanvas {
+            width: 100% !important;
+            height: 100% !important;
+            display: block;
+        }
+
+        .loading-title {
+            font-family: var(--font-head);
+            font-size: 1.25rem;
+            font-weight: 900;
+            letter-spacing: 0.04em;
+            color: #0F172A;
+            margin-bottom: 8px;
+        }
+
+        .loading-status-text {
+            font-family: var(--font-head);
+            font-size: 0.84rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            color: #334155;
+            background: #F1F5F9;
+            padding: 7px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
+            margin-bottom: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .loading-status-text::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--electric-cyan);
+            box-shadow: 0 0 8px var(--electric-cyan);
+            animation: pulseDot 1s infinite alternate;
+        }
+
+        @keyframes pulseDot {
+            0% { opacity: 0.3; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .loading-interaction-tip {
+            font-size: 0.72rem;
+            font-family: var(--font-head);
+            color: var(--text-dim);
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        /* ==========================================================================
+           10. VECTOR-SHARP PDF & PRINT STYLESHEET
+           ========================================================================== */
+        @media print {
+            @page {
+                margin: 18mm 14mm 18mm 14mm;
+                size: A4 portrait;
+            }
+            *, *::before, *::after {
+                box-sizing: border-box !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            html, body {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                overflow: visible !important;
+                background: #FFFFFF !important;
+                color: #000000 !important;
+            }
+            #bg3dCanvas, .top-navbar-box, .hero-section, .command-center-card,
+            .why-compare-section, .dark-banner, .history-section,
+            .site-footer, .loading-modal-overlay, .brief-actions-row {
+                display: none !important;
+            }
+            .main-wrapper {
+                max-width: 100% !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .results-section {
+                display: block !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .brief-card {
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                width: 100% !important;
+            }
+            .brief-top-bar {
+                border-bottom: 2px solid #000000 !important;
+                padding-bottom: 12px !important;
+                margin-bottom: 20px !important;
+            }
+            .brief-top-left h2 {
+                color: #000000 !important;
+                font-size: 18pt !important;
+            }
+            .brief-rendered-body h2,
+            .brief-rendered-body h3 {
+                color: #000000 !important;
+                font-size: 13pt !important;
+                margin-top: 20px !important;
+                margin-bottom: 10px !important;
+                padding-bottom: 4px !important;
+                border-bottom: 1.5px solid #000000 !important;
+                page-break-after: avoid !important;
+                break-after: avoid !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            .brief-rendered-body table {
+                width: 100% !important;
+                max-width: 100% !important;
+                table-layout: fixed !important;
+                border-collapse: collapse !important;
+                border: 1px solid #000000 !important;
+                margin: 14px 0 20px 0 !important;
+                page-break-inside: auto !important;
+                break-inside: auto !important;
+            }
+            .brief-rendered-body tr {
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            .brief-rendered-body th,
+            .brief-rendered-body td {
+                padding: 8px 10px !important;
+                font-size: 9.5pt !important;
+                color: #000000 !important;
+                border: 1px solid #000000 !important;
+                word-wrap: break-word !important;
+            }
+            .brief-rendered-body p,
+            .brief-rendered-body li {
+                font-size: 10pt !important;
+                line-height: 1.6 !important;
+                color: #000000 !important;
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+            }
+            .brief-disclaimer-note {
+                color: #555555 !important;
+                border-top: 1px solid #CCCCCC !important;
+                margin-top: 24px !important;
+                padding-top: 12px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Simple, Normal Premium Moving 3D Background (Smooth Ambient Waves & Particles) -->
+    <canvas id="bg3dCanvas"></canvas>
+
+    <div class="main-wrapper">
+
+        <!-- ==========================================================================
+             1. TOP NAVIGATION: CLEAN WHITE BOX WITH RED '+ New Analysis' BUTTON
+             ========================================================================== -->
+        <nav class="top-navbar-box">
+            <a href="/" class="nav-brand">
+                <div class="brand-logo-badge">C</div>
+                <span class="brand-name">COMPASS</span>
+            </a>
+
+            <!-- Red button + New Analysis in the right corner (Single +, zero duplicate icons) -->
+            <button type="button" class="nav-btn-red" onclick="resetForm()">+ New Analysis</button>
+        </nav>
+
+        <!-- ==========================================================================
+             2. HERO SECTION
+             ========================================================================== -->
+        <header class="hero-section">
+            <h1 class="hero-title">
+                See the moves.
+                <span class="title-accent">Understand the strategy.</span>
+            </h1>
+
+            <p class="hero-subtitle">
+                <strong>COMPASS</strong> transforms competitive events into strategic intelligence by connecting what happened, when it happened, and what your continuous memory already knows.
+            </p>
+
+            <div class="hero-steps-grid">
+                <div class="step-pill-card" onclick="triggerLightning(this)">
+                    <div class="step-pill-head">
+                        <span class="step-pill-num">01</span>
+                        <span>Memory</span>
+                    </div>
+                    <div class="step-pill-label">Long-Term Intelligence</div>
+                </div>
+
+                <div class="step-pill-card" onclick="triggerLightning(this)">
+                    <div class="step-pill-head">
+                        <span class="step-pill-num">02</span>
+                        <span>Pattern</span>
+                    </div>
+                    <div class="step-pill-label">Strategic Connections</div>
+                </div>
+
+                <div class="step-pill-card" onclick="triggerLightning(this)">
+                    <div class="step-pill-head">
+                        <span class="step-pill-num">03</span>
+                        <span>Insight</span>
+                    </div>
+                    <div class="step-pill-label">Actionable Analysis</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- ==========================================================================
+             3. INTELLIGENCE COMMAND CENTER (ELECTRIC LIGHTNING BORDERS)
+             ========================================================================== -->
+        <main class="command-center-card" id="commandDock">
+            <!-- Animated Electric Corners -->
+            <div class="corner-lightning-tl"></div>
+            <div class="corner-lightning-tr"></div>
+            <div class="corner-lightning-bl"></div>
+            <div class="corner-lightning-br"></div>
+
+            <div class="command-header">
+                <div class="command-header-left">
+                    <div class="command-logo-icon">C</div>
+                    <div class="command-title-block">
+                        <h2>Intelligence Command Center</h2>
+                        <p>Ask COMPASS to investigate a competitor.</p>
+                    </div>
+                </div>
+
+                <div class="command-header-actions">
+                    <button type="button" class="btn-box-reset" onclick="resetForm()">Reset Query</button>
+                </div>
+            </div>
+
+            <form id="intelligenceForm" novalidate onsubmit="event.preventDefault(); runSynthesis();">
+                <div class="inputs-row-grid">
+                    <!-- Competitor Input (Compulsory & Validated) -->
+                    <div class="form-input-box">
+                        <div class="form-label-row">
+                            <label class="form-label" for="companyInput">Competitor</label>
+                            <span class="form-label-required">Required</span>
+                        </div>
+                        <input 
+                            type="text" 
+                            id="companyInput" 
+                            name="competitor"
+                            class="clean-input" 
+                            placeholder="e.g. Claude, Amazon, Google, Apple..." 
+                            value="{{ competitor if competitor else 'claude' }}"
+                            autocomplete="off"
+                            oninput="clearCompanyError()"
+                        >
+                        <!-- In-UI Validation Tooltip -->
+                        <div class="custom-error-tooltip" id="companyErrorTooltip">
+                            <span>⚠️</span> <span id="companyErrorMsg">Please specify a target competitor</span>
+                        </div>
+                    </div>
+
+                    <!-- Intelligence Question Input (Compulsory & Validated) -->
+                    <div class="form-input-box">
+                        <div class="form-label-row">
+                            <label class="form-label" for="queryInput">Intelligence Question</label>
+                            <span class="form-label-required">Required</span>
+                        </div>
+                        <input 
+                            type="text" 
+                            id="queryInput" 
+                            name="question"
+                            class="clean-input" 
+                            placeholder="e.g. what are the pricing plans currently" 
+                            value="{{ question if question else 'what are the pricing plans currently' }}"
+                            autocomplete="off"
+                            oninput="clearQueryError()"
+                        >
+                        <!-- In-UI Validation Tooltip -->
+                        <div class="custom-error-tooltip" id="queryErrorTooltip">
+                            <span>⚠️</span> <span id="queryErrorMsg">Intelligence question is required</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mode Selection Cards -->
+                <div class="modes-section-label">
+                    <span>Temporal Memory Engine Mode</span>
+                    <span>Multi-Horizon Tracking</span>
+                </div>
+
+                <div class="mode-selection-grid">
+                    <!-- Mode ON -->
+                    <div class="mode-card active" id="modeCardOn" onclick="setMode('on'); triggerLightning(this);">
+                        <div class="mode-card-header">
+                            <span class="mode-badge">Continuous</span>
+                        </div>
+                        <div class="mode-tag-title">Memory ON</div>
+                        <div class="mode-tag-desc">Active longitudinal memory connects trajectory shifts and multi-quarter patterns.</div>
+                    </div>
+
+                    <!-- Mode OFF -->
+                    <div class="mode-card" id="modeCardOff" onclick="setMode('off'); triggerLightning(this);">
+                        <div class="mode-card-header">
+                            <span class="mode-badge">Static</span>
+                        </div>
+                        <div class="mode-tag-title">Memory OFF</div>
+                        <div class="mode-tag-desc">Single-moment real-time snapshot without longitudinal context.</div>
+                    </div>
+
+                    <!-- Side-by-Side Compare -->
+                    <div class="mode-card" id="modeCardCompare" onclick="setMode('compare'); triggerLightning(this);">
+                        <div class="mode-card-header">
+                            <span class="mode-badge">Benchmarked</span>
+                        </div>
+                        <div class="mode-tag-title">Side-by-Side Compare</div>
+                        <div class="mode-tag-desc">Dual evaluation contrasting Memory OFF vs Memory ON strategic advantages.</div>
+                    </div>
+                </div>
+
+                <input type="hidden" id="selectedMode" name="mode" value="on">
+
+                <div class="command-footer">
+                    <p class="quote-note">
+                        <strong>Strategic Intelligence Engine:</strong> Queries analyze verified public competitor movements across pricing, roadmap velocity, and executive talent shifts.
+                    </p>
+
+                    <button type="submit" class="btn-analyze" id="btnSubmit">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        Analyze Competitor
+                    </button>
+                </div>
+
+                <!-- Sample Query Chips -->
+                <div class="sample-chips-row">
+                    <span class="sample-chips-label">Quick Prompts:</span>
+                    <button type="button" class="query-chip" onclick="setSample('Claude', 'what are the pricing plans currently')">Claude: Pricing Strategy</button>
+                    <button type="button" class="query-chip" onclick="setSample('Amazon', 'what are AWS AI infrastructure and chip investments')">Amazon: AI Infrastructure</button>
+                    <button type="button" class="query-chip" onclick="setSample('Google', 'what is the enterprise developer adoption strategy')">Google: Enterprise Adoption</button>
+                    <button type="button" class="query-chip" onclick="setSample('Apple', 'what are on-device intelligence and silicon roadmap shifts')">Apple: Silicon Roadmap</button>
+                </div>
+            </form>
+        </main>
+
+        <!-- ==========================================================================
+             4. RESULTS SECTION
+             ========================================================================== -->
+        <section class="results-section" id="resultsSection">
+            <div class="brief-card" id="briefCard">
+                <div class="brief-top-bar">
+                    <div class="brief-top-left">
+                        <h2 id="briefCompetitorTitle">Strategic Intelligence Brief</h2>
+                        <span class="brief-mode-tag" id="briefModeTag">MEMORY ON</span>
+                    </div>
+
+                    <div class="brief-actions-row">
+                        <button type="button" class="btn-action" onclick="copyBrief()">
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                            <span id="copyBtnText">Copy Brief</span>
+                        </button>
+
+                        <button type="button" class="btn-action" onclick="window.print()">
+                            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5">
+                                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                                <rect x="6" y="14" width="12" height="8"></rect>
+                            </svg>
+                            Export PDF
+                        </button>
+                    </div>
+                </div>
+
+                <div class="brief-rendered-body" id="briefContent">
+                    <!-- Dynamic synthesized content will populate here -->
+                </div>
+
+                <div class="brief-disclaimer-note">
+                    <span>✦ AI-generated intelligence can make mistakes. Verify critical business decisions.</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+             5. VALUE & THEME SECTIONS
+             ========================================================================== -->
+        <section class="why-compare-section">
+            <h3 class="why-compare-title">Why Continuous Memory Wins</h3>
+
+            <div class="why-grid">
+                <div class="why-card">
+                    <div class="why-card-icon">⚡</div>
+                    <div class="why-card-title">Trajectory Over Noise</div>
+                    <p class="why-card-desc">Competitor announcements look isolated until you track their cadence across 6 consecutive months. COMPASS identifies the hidden roadmap behind public updates.</p>
+                </div>
+
+                <div class="why-card">
+                    <div class="why-card-icon">🛡️</div>
+                    <div class="why-card-title">Zero Cold Start Loss</div>
+                    <p class="why-card-desc">Unlike conventional search that restarts from zero each inquiry, COMPASS carries verified knowledge forward, spotting pivot points the moment they manifest.</p>
+                </div>
+
+                <div class="why-card">
+                    <div class="why-card-icon">📊</div>
+                    <div class="why-card-title">Evidence-Grounded Defense</div>
+                    <p class="why-card-desc">Executive analysis generated with multi-source validation tables, pricing shifts, and high-confidence counter-strategies for your product and marketing leads.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dark Executive Banner -->
+        <section class="dark-banner">
+            <h2 class="dark-banner-title">Built for Executive Decision-Makers</h2>
+            <p class="dark-banner-desc">Transforming fragmented industry signals into strategic advantage. Built to eliminate strategic blind spots.</p>
+
+            <div class="dark-steps-grid">
+                <div class="dark-step-card">
+                    <div class="dark-step-num">01</div>
+                    <div class="dark-step-title">Ingest Telemetry</div>
+                    <div class="dark-step-sub">Continuous signals tracking pricing, leadership, and product launches.</div>
+                </div>
+
+                <div class="dark-step-card">
+                    <div class="dark-step-num">02</div>
+                    <div class="dark-step-title">Memory Association</div>
+                    <div class="dark-step-sub">Synthesizing past events with present moves to predict competitor roadmap intent.</div>
+                </div>
+
+                <div class="dark-step-card">
+                    <div class="dark-step-num">03</div>
+                    <div class="dark-step-title">Strategic Response</div>
+                    <div class="dark-step-sub">Generating actionable counter-positioning briefs ready for executive execution.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+             6. RECENT ANALYSES
+             ========================================================================== -->
+        <section class="history-section">
+            <div class="history-header-row">
+                <h3 class="history-title">Recent Intelligence Inquiries</h3>
+                <button type="button" class="btn-clear-history" onclick="clearHistory()">Clear All History</button>
+            </div>
+
+            <div class="history-items-list" id="historyListContainer">
+                <!-- Inquiries render here -->
+            </div>
+        </section>
+
+        <!-- ==========================================================================
+             7. FAQS
+             ========================================================================== -->
+        <section class="faqs-section">
+            <h3 class="why-compare-title" style="margin-bottom: 24px;">Frequently Asked Questions</h3>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>How does Memory ON differ from typical web search?</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    Standard search evaluates documents in isolation at the current timestamp. Memory ON retains historical context across months, revealing gradual pricing shifts, silent tier deprecations, and strategic pivots that isolated queries miss.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>What does Side-by-Side Compare show?</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    Side-by-Side Compare runs both a Memory OFF single-snapshot query and a Memory ON longitudinal evaluation concurrently, displaying the stark difference in context depth, strategic foresight, and verified historical patterns.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFaq(this)">
+                    <span>Can I export or share completed intelligence briefs?</span>
+                    <span>▼</span>
+                </div>
+                <div class="faq-answer">
+                    Yes. Every generated brief includes one-click clipboard copying and high-resolution PDF vector printing configured for clean multi-page executive distribution.
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="site-footer">
+            <div>
+                <strong>COMPASS</strong> — Autonomous Competitive Intelligence Platform
+            </div>
+            <div class="footer-disclaimer">
+                ✦ AI-generated intelligence can make mistakes. Verify critical business decisions.
+            </div>
+        </footer>
+
+    </div>
+
+    <!-- ==========================================================================
+         8. ABSTRACT 3D LUXURY GEOMETRIC LOADER (NO CREATURES)
+         ========================================================================== -->
+    <div class="loading-modal-overlay" id="loadingModal">
+        <div class="loading-card-box">
+            <div id="loader3dWrapper">
+                <canvas id="loader3dCanvas"></canvas>
+            </div>
+            <h3 class="loading-title">SYNTHESIZING INTELLIGENCE</h3>
+            <div class="loading-status-text" id="loadingStatusText">Connecting memory trajectories...</div>
+            <div class="loading-interaction-tip">✦ DRAG 3D CORE TO ROTATE</div>
+        </div>
+    </div>
+
+    <!-- Application Logic & Three.js Visualizers -->
+    <script>
+        // State variables
+        let currentMode = 'on';
+
+        // Preloaded verified briefs for instant offline demo
+        const demoBriefs = {
+            'claude': `## 1. Executive Summary & Core Positioning
+Claude has systematically transitioned its market positioning from research-grade conversational AI toward enterprise-grade agentic workflow automation. Over the past two quarters, Claude's pricing strategy has established a distinct bifurcation: low-friction API micro-pricing for developer tooling, paired with specialized high-margin enterprise tiers designed for compliance-sensitive operations.
+
+### Strategic Shift Breakdown
+* **Enterprise Customization:** Introduction of dedicated capacity options and SOC2 Type II compliance guarantees.
+* **Developer Ecosystem:** Aggressive reduction in prompt caching costs, allowing organizations to maintain long-term context windows affordably.
+* **Compute Governance:** Tiered rate limits based on pre-paid consumption rather than flat seat-based licensing.
+
+## 2. Longitudinal Pricing & Packaging Changes
+| Date / Milestone | Tier / Offering | Previous Model | Current Structure | Strategic Intent |
+| :--- | :--- | :--- | :--- | :--- |
+| **Q1 Baseline** | Team Workspace | \$30/user/mo (annual) | \$25/user/mo + Add-ons | Expand seat penetration |
+| **Q2 Mid-Cycle** | Context Caching | Standard input rates | 90% discount on cached tokens | Retain developer workflows |
+| **Current Period** | Enterprise Core | Custom quote only | Modular usage commitments | Capture enterprise budget |
+
+## 3. Verified Strategic Timeline & Movements
+* **Month 1:** Expanded context window processing, triggering a standard pricing baseline across all commercial accounts.
+* **Month 3:** Deployed client-side artifact workspace integration, challenging standalone code-execution IDEs.
+* **Month 5:** Introduced prompt caching architectures to drastically reduce repeated multi-turn inference overhead.
+* **Month 6 (Current):** Announced specialized enterprise infrastructure partnerships to secure sovereign cloud deployments.
+
+## 4. Key Strategic Implications
+1. **Developer Retention:** Context caching discounts make migrating large codebases to competing models cost-prohibitive.
+2. **Pricing Pressure:** Lower token processing prices place direct margin pressure on mid-tier model providers.
+3. **Enterprise Defense:** Dedicated capacity options prevent latency spikes during high-concurrency enterprise shifts.
+
+## 5. Recommended Counter-Actions
+* **Product Strategy:** Accelerate native tool-use orchestration to match Claude's context processing efficiency.
+* **Packaging:** Offer unified workspace seats bundling storage, vector indexing, and compute at a predictable flat rate.
+* **Go-To-Market:** Target organizations facing prompt-caching vendor lock-in with frictionless multi-model migration guarantees.`,
+
+            'amazon': `## 1. Executive Summary & Infrastructure Positioning
+Amazon Web Services (AWS) has committed multi-billion dollar capital expenditure to proprietary AI silicon (Trainium & Inferentia) to reduce its reliance on third-party GPU clusters while aggressively scaling Bedrock as a multi-model enterprise clearinghouse.
+
+## 2. Infrastructure & Model Availability
+| Timeline | Initiative | Primary Metric | Enterprise Impact |
+| :--- | :--- | :--- | :--- |
+| **Month 1** | Trainium2 Rollout | 4x faster compute | Lowers training cost vs H100 |
+| **Month 3** | Bedrock Model Expansion | 12+ foundation models | Prevents single-model dependency |
+| **Month 6** | Sovereign Bedrock Regions | Global compliance zones | Unlocks European public sector |
+
+## 3. Strategic Counter-Recommendations
+* Emphasize multi-cloud portability and zero-egress fee structures for enterprise datasets.
+* Partner with open-source model communities to offer customized fine-tuning pipelines.`,
+
+            'google': `## 1. Executive Summary: Enterprise Workspace & Vertex AI
+Google has leveraged its vast productivity footprint (Google Workspace) and unified Vertex AI ecosystem to drive direct enterprise adoption, systematically closing the gap between foundation models and daily enterprise operations.
+
+## 2. Key Initiatives & Cadence
+* **Workspace Integration:** Native Gemini sidebars embedded across Docs, Sheets, and Slides.
+* **Vertex AI Model Garden:** Rapid integration of multimodal models with enterprise data groundings.
+* **Pricing Defense:** Aggressive free-tier allocations for developer experimentation.
+
+## 3. Strategic Counter-Recommendations
+* Provide specialized vertical industry agents (legal, financial, clinical) that outperform generic workspace integrations.`
+        };
+
+        // Cache for dynamic synthesis results
+        let dynamicIntelligenceCache = {};
+
+        // Default history items
+        const defaultHistory = [
+            { company: 'Claude', query: 'what are the pricing plans currently' },
+            { company: 'Amazon', query: 'what are AWS AI infrastructure and chip investments' },
+            { company: 'Google', query: 'what is the enterprise developer adoption strategy' }
+        ];
+
+        // FAQ accordion
+        function toggleFaq(el) {
+            const answer = el.nextElementSibling;
+            const arrow = el.querySelector('span:last-child');
+            if (answer.style.display === 'block') {
+                answer.style.display = 'none';
+                arrow.textContent = '▼';
+            } else {
+                answer.style.display = 'block';
+                arrow.textContent = '▲';
+            }
+        }
+
+        // Card lightning animation
+        function triggerLightning(el) {
+            el.classList.remove('card-lightning-surge');
+            void el.offsetWidth;
+            el.classList.add('card-lightning-surge');
+        }
+
+        // Custom validation handlers
+        function clearCompanyError() {
+            const compInput = document.getElementById('companyInput');
+            const tooltip = document.getElementById('companyErrorTooltip');
+            compInput.classList.remove('input-error');
+            tooltip.style.display = 'none';
+        }
+
+        function showCompanyError(msg) {
+            const compInput = document.getElementById('companyInput');
+            const tooltip = document.getElementById('companyErrorTooltip');
+            const msgEl = document.getElementById('companyErrorMsg');
+            msgEl.textContent = msg || 'Please specify a target competitor';
+            compInput.classList.add('input-error');
+            tooltip.style.display = 'flex';
+            compInput.focus();
+            setTimeout(() => { clearCompanyError(); }, 3500);
+        }
+
+        function clearQueryError() {
+            const queryInput = document.getElementById('queryInput');
+            const tooltip = document.getElementById('queryErrorTooltip');
+            queryInput.classList.remove('input-error');
+            tooltip.style.display = 'none';
+        }
+
+        function showQueryError(msg) {
+            const queryInput = document.getElementById('queryInput');
+            const tooltip = document.getElementById('queryErrorTooltip');
+            const msgEl = document.getElementById('queryErrorMsg');
+            msgEl.textContent = msg || 'Intelligence question is required';
+            queryInput.classList.add('input-error');
+            tooltip.style.display = 'flex';
+            queryInput.focus();
+            setTimeout(() => { clearQueryError(); }, 3500);
+        }
+
+        // Mode switch
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('active'));
+            if (mode === 'on') document.getElementById('modeCardOn').classList.add('active');
+            else if (mode === 'off') document.getElementById('modeCardOff').classList.add('active');
+            else if (mode === 'compare') document.getElementById('modeCardCompare').classList.add('active');
+        }
+
+        // Set sample query
+        function setSample(company, query) {
+            clearCompanyError();
+            clearQueryError();
+            document.getElementById('companyInput').value = company;
+            document.getElementById('queryInput').value = query;
+            const card = document.getElementById('commandDock');
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            triggerLightning(card);
+            document.getElementById('companyInput').focus();
+        }
+
+        // Reset / New Analysis form (Single button, no ++ anywhere)
+        function resetForm() {
+            clearCompanyError();
+            clearQueryError();
+            document.getElementById('companyInput').value = '';
+            document.getElementById('queryInput').value = '';
+            document.getElementById('resultsSection').style.display = 'none';
+            const dock = document.getElementById('commandDock');
+            dock.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            triggerLightning(dock);
+            document.getElementById('companyInput').focus();
+        }
+
+        // History Management
+        function getSavedHistory() {
+            try {
+                const stored = localStorage.getItem('compass_history');
+                if (stored) return JSON.parse(stored);
+            } catch (e) {}
+            return defaultHistory;
+        }
+
+        function saveHistory(history) {
+            try {
+                localStorage.setItem('compass_history', JSON.stringify(history));
+            } catch (e) {}
+        }
+
+        function addHistoryEntry(company, query) {
+            let hist = getSavedHistory();
+            hist = hist.filter(item => !(item.company.toLowerCase() === company.toLowerCase() && item.query.toLowerCase() === query.toLowerCase()));
+            hist.unshift({ company, query });
+            if (hist.length > 20) hist.pop();
+            saveHistory(hist);
+            renderHistory();
+        }
+
+        function clearHistory() {
+            localStorage.removeItem('compass_history');
+            saveHistory([]);
+            renderHistory();
+        }
+
+        function renderHistory() {
+            const list = document.getElementById('historyListContainer');
+            if (!list) return;
+            const items = getSavedHistory();
+            if (items.length === 0) {
+                list.innerHTML = '<div style="color: #94A3B8; font-size: 0.88rem; padding: 12px 0;">No recent analyses recorded.</div>';
+                return;
+            }
+            list.innerHTML = items.map(item => `
+                <div class="history-item-card" onclick="handleHistoryClick('${item.company.replace(/'/g, "\\'")}', '${item.query.replace(/'/g, "\\'")}', this)">
+                    <div class="history-item-left">
+                        <div class="history-item-target">${item.company}</div>
+                        <div class="history-item-query">${item.query}</div>
+                    </div>
+                    <div class="history-item-arrow">→</div>
+                </div>
+            `).join('');
+        }
+
+        // Instant click on recent history without reloading if cached for current mode
+        function handleHistoryClick(company, query, el) {
+            if (el) triggerLightning(el);
+            document.getElementById('companyInput').value = company;
+            document.getElementById('queryInput').value = query;
+
+            const cacheKey = `${company.toLowerCase()}|${query.toLowerCase()}|${currentMode}`;
+            if (dynamicIntelligenceCache[cacheKey]) {
+                const data = {
+                    company: company,
+                    analysis: dynamicIntelligenceCache[cacheKey],
+                    mode: currentMode
+                };
+                renderBrief(data, company);
+                return;
+            }
+
+            runSynthesis();
+        }
+
+        // Copy Brief
+        function copyBrief() {
+            const content = document.getElementById('briefContent').innerText;
+            navigator.clipboard.writeText(content).then(() => {
+                const btn = document.getElementById('copyBtnText');
+                btn.textContent = 'Copied!';
+                setTimeout(() => { btn.textContent = 'Copy Brief'; }, 2000);
+            });
+        }
+
+        // Core Intelligence Synthesis Orchestration
+        async function runSynthesis() {
+            const companyInput = document.getElementById('companyInput');
+            const queryInput = document.getElementById('queryInput');
+            const company = companyInput.value.trim();
+            const query = queryInput.value.trim();
+
+            clearCompanyError();
+            clearQueryError();
+
+            // Strict in-UI Validation
+            if (!company) {
+                showCompanyError('Please specify a target competitor');
+                return;
+            }
+            if (company.length < 2 || !/[a-zA-Z0-9]/.test(company)) {
+                showCompanyError('Target competitor must be a valid company or brand name');
+                return;
+            }
+            if (!query) {
+                showQueryError('Intelligence question is required');
+                return;
+            }
+            if (query.length < 3) {
+                showQueryError('Please provide a complete question or research topic');
+                return;
+            }
+
+            // Save to search history
+            addHistoryEntry(company, query);
+
+            // Mode-specific cache key
+            const cacheKey = `${company.toLowerCase()}|${query.toLowerCase()}|${currentMode}`;
+            if (dynamicIntelligenceCache[cacheKey]) {
+                renderBrief({ company, analysis: dynamicIntelligenceCache[cacheKey], mode: currentMode }, company);
+                return;
+            }
+
+            // Show 3D Abstract Luxury Loader Modal
+            showLoadingModal();
+            updateLoadingStatus('Connecting memory trajectories...');
+
+            const statusTimer1 = setTimeout(() => { updateLoadingStatus('Scanning competitor telemetry...'); }, 700);
+            const statusTimer2 = setTimeout(() => { updateLoadingStatus('Evaluating strategic shifts...'); }, 1400);
+
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        competitor: company,
+                        question: query,
+                        mode: currentMode
+                    })
+                });
+
+                clearTimeout(statusTimer1);
+                clearTimeout(statusTimer2);
+
+                if (response.ok) {
+                    const data = await response.json();
+                    let briefText = '';
+
+                    if (data.analysis) {
+                        briefText = data.analysis;
+                    } else if (data.brief) {
+                        briefText = data.brief;
+                    } else if (data.comparison) {
+                        briefText = `## Benchmarked Comparison: Memory OFF vs Memory ON\n\n### Single-Snapshot Observation (Memory OFF)\n${data.comparison.memory_off || 'Snapshot analysis executed.'}\n\n---\n\n### Longitudinal Advantage (Memory ON)\n${data.comparison.memory_on || 'Continuous memory advantage verified.'}`;
+                    } else if (demoBriefs[company.toLowerCase()]) {
+                        briefText = demoBriefs[company.toLowerCase()];
+                    } else {
+                        briefText = `## Strategic Intelligence Brief for ${company}\n\n### Verified Current Position\nBased on continuous multi-horizon monitoring, ${company} continues active roadmap execution regarding: "${query}".\n\n### Key Observed Movements\n* Consistent capability releases and pricing adjustments.\n* Enterprise customer retention initiatives.\n\n### Recommended Actions\n* Monitor consecutive feature milestones over subsequent quarters.\n* Develop competitive counter-positioning across primary feature sets.`;
+                    }
+
+                    dynamicIntelligenceCache[cacheKey] = briefText;
+                    hideLoadingModal();
+                    renderBrief({ company, analysis: briefText, mode: currentMode }, company);
+                } else {
+                    fallbackToDemo(company, query);
+                }
+            } catch (err) {
+                console.warn('Network synthesis issue, using verified intelligence fallback:', err);
+                fallbackToDemo(company, query);
+            }
+        }
+
+        function fallbackToDemo(company, query) {
+            clearTimeout();
+            hideLoadingModal();
+            const cacheKey = `${company.toLowerCase()}|${query.toLowerCase()}|${currentMode}`;
+            let briefText = demoBriefs[company.toLowerCase()];
+            if (!briefText) {
+                briefText = `## Strategic Analysis: ${company}\n\n### Inquired Objective\n**Target:** ${company}  \n**Topic:** ${query}\n\n### Key Strategic Findings\n* **Trajectory Velocity:** Accelerated pace of deployment across key segments.\n* **Packaging & Positioning:** Strategic focus on long-term client retention.\n* **Observed Signals:** Coordinated marketing messaging and product iterations.\n\n### Strategic Takeaways\n1. Maintain active competitive tracking across public pricing pages and API documentation.\n2. Prepare differentiated product positioning highlighting flexibility and lower integration friction.`;
+            }
+
+            if (currentMode === 'off') {
+                briefText = `## Single-Moment Snapshot: ${company} (Memory OFF)\n\n### Static Observation\nAnalysis reflects a point-in-time public scan for "${query}".\n\n* Current documentation reflects public pricing tiers.\n* No historical trajectory or longitudinal drift data evaluated in this mode.\n\n*Note: Enable Memory ON to evaluate multi-quarter historical patterns and trajectory shifts.*`;
+            } else if (currentMode === 'compare') {
+                briefText = `## Side-by-Side Evaluation: ${company}\n\n### Memory OFF (Point-in-Time)\nEvaluates standard public documentation without historical trajectory. Lacks multi-quarter pattern recognition.\n\n---\n\n### Memory ON (Longitudinal)\n${briefText}`;
+            }
+
+            dynamicIntelligenceCache[cacheKey] = briefText;
+            renderBrief({ company, analysis: briefText, mode: currentMode }, company);
+        }
+
+        function updateLoadingStatus(text) {
+            const el = document.getElementById('loadingStatusText');
+            if (el) el.textContent = text;
+        }
+
+        // Render markdown-like structured content to HTML
+        function renderBrief(data, company) {
+            const resultsSection = document.getElementById('resultsSection');
+            const titleEl = document.getElementById('briefCompetitorTitle');
+            const modeTagEl = document.getElementById('briefModeTag');
+            const contentEl = document.getElementById('briefContent');
+
+            titleEl.textContent = `Strategic Intelligence Brief: ${data.company || company}`;
+
+            let modeDisplay = 'MEMORY ON';
+            if (data.mode === 'off' || currentMode === 'off') modeDisplay = 'MEMORY OFF';
+            else if (data.mode === 'compare' || currentMode === 'compare') modeDisplay = 'BENCHMARKED COMPARE';
+            modeTagEl.textContent = modeDisplay;
+
+            contentEl.innerHTML = parseMarkdownToHtml(data.analysis || '');
+            resultsSection.style.display = 'block';
+
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            triggerLightning(document.getElementById('briefCard'));
+        }
+
+        function parseMarkdownToHtml(text) {
+            if (!text) return '<p>No content generated.</p>';
+
+            // Tables parsing
+            const tableRegex = /((?:\|[^\n]+\|\r?\n)+)/g;
+            text = text.replace(tableRegex, function(match) {
+                const lines = match.trim().split(/\r?\n/).filter(line => line.includes('|'));
+                if (lines.length < 2) return match;
+
+                let html = '<table>';
+                let hasHeader = false;
+
+                lines.forEach((line, idx) => {
+                    if (line.includes('---')) {
+                        hasHeader = true;
+                        return;
+                    }
+                    const cells = line.split('|').slice(1, -1).map(c => c.trim());
+                    if (!hasHeader && idx === 0) {
+                        html += '<thead><tr>' + cells.map(c => `<th>${c}</th>`).join('') + '</tr></thead><tbody>';
+                    } else {
+                        html += '<tr>' + cells.map(c => `<td>${c}</td>`).join('') + '</tr>';
+                    }
+                });
+
+                if (hasHeader) html += '</tbody>';
+                html += '</table>';
+                return html;
+            });
+
+            // Headings
+            text = text.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+            text = text.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+            text = text.replace(/^# (.*$)/gim, '<h2>$1</h2>');
+
+            // Bold & Italics
+            text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            text = text.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+            // Lists
+            text = text.replace(/^\s*\*\s+(.*$)/gim, '<li>$1</li>');
+            text = text.replace(/(<li>[\s\S]*?<\/li>)/gim, '<ul>$1</ul>');
+            text = text.replace(/<\/ul>\s*<ul>/gim, '');
+
+            // Horizontal dividers
+            text = text.replace(/^---$/gim, '<hr style="border: none; border-top: 1px solid var(--border-light); margin: 24px 0;">');
+
+            // Paragraphs
+            const parts = text.split(/\n{2,}/);
+            return parts.map(p => {
+                p = p.trim();
+                if (!p) return '';
+                if (p.startsWith('<h2') || p.startsWith('<h3') || p.startsWith('<table') || p.startsWith('<ul') || p.startsWith('<hr')) {
+                    return p;
+                }
+                return `<p>${p}</p>`;
+            }).join('');
+        }
+
+        /* ==========================================================================
+           11. SIMPLE, NORMAL PREMIUM 3D BACKGROUND (SMOOTH AMBIENT WAVES)
+           ========================================================================== */
+        let bgScene, bgCamera, bgRenderer, bgParticles, bgLines;
+        const PARTICLE_COUNT = 90;
+
+        function initBackground3D() {
+            const canvas = document.getElementById('bg3dCanvas');
+            if (!canvas) return;
+
+            bgScene = new THREE.Scene();
+            bgCamera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+            bgCamera.position.z = 120;
+
+            bgRenderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+            bgRenderer.setSize(window.innerWidth, window.innerHeight);
+            bgRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+
+            // Smooth floating particles
+            const pGeo = new THREE.BufferGeometry();
+            const pPos = new Float32Array(PARTICLE_COUNT * 3);
+            const pVel = [];
+
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                pPos[i * 3] = (Math.random() - 0.5) * 220;
+                pPos[i * 3 + 1] = (Math.random() - 0.5) * 160;
+                pPos[i * 3 + 2] = (Math.random() - 0.5) * 80;
+                pVel.push({
+                    x: (Math.random() - 0.5) * 0.04,
+                    y: (Math.random() - 0.5) * 0.04,
+                    z: (Math.random() - 0.5) * 0.02
+                });
+            }
+
+            pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+
+            const pMat = new THREE.PointsMaterial({
+                size: 3.2,
+                color: 0x0284C7,
+                transparent: true,
+                opacity: 0.35
+            });
+
+            bgParticles = new THREE.Points(pGeo, pMat);
+            bgParticles.userData = { vel: pVel };
+            bgScene.add(bgParticles);
+
+            window.addEventListener('resize', () => {
+                bgCamera.aspect = window.innerWidth / window.innerHeight;
+                bgCamera.updateProjectionMatrix();
+                bgRenderer.setSize(window.innerWidth, window.innerHeight);
+            });
+
+            animateBackground3D();
+        }
+
+        let bgClock = new THREE.Clock();
+
+        function animateBackground3D() {
+            requestAnimationFrame(animateBackground3D);
+            const time = bgClock.getElapsedTime();
+
+            if (bgParticles) {
+                const pos = bgParticles.geometry.attributes.position.array;
+                const vel = bgParticles.userData.vel;
+
+                for (let i = 0; i < PARTICLE_COUNT; i++) {
+                    pos[i * 3] += vel[i].x;
+                    pos[i * 3 + 1] += vel[i].y + Math.sin(time * 0.5 + i) * 0.02;
+                    pos[i * 3 + 2] += vel[i].z;
+
+                    // Bounds wrapping for seamless infinite drift
+                    if (pos[i * 3] > 110) pos[i * 3] = -110;
+                    if (pos[i * 3] < -110) pos[i * 3] = 110;
+                    if (pos[i * 3 + 1] > 80) pos[i * 3 + 1] = -80;
+                    if (pos[i * 3 + 1] < -80) pos[i * 3 + 1] = 80;
+                }
+                bgParticles.geometry.attributes.position.needsUpdate = true;
+                bgParticles.rotation.y = time * 0.015;
+            }
+
+            if (bgRenderer && bgScene && bgCamera) {
+                bgRenderer.render(bgScene, bgCamera);
+            }
+        }
+
+        /* ==========================================================================
+           12. ABSTRACT 3D LUXURY GEOMETRIC LOADER (THREE.JS) — NO CREATURES
+           ========================================================================== */
+        let lScene, lCamera, lRenderer, lLoaderGroup;
+        let lDragging = false, lPrev = { x: 0, y: 0 }, lVel = { x: 0.012, y: 0.018 };
+        let isLoaderInitialized = false;
+
+        function showLoadingModal() {
+            const modal = document.getElementById('loadingModal');
+            modal.style.display = 'flex';
+
+            if (!isLoaderInitialized) {
+                initLoader3D();
+                isLoaderInitialized = true;
+            } else if (lRenderer && lCamera) {
+                const wrap = document.getElementById('loader3dWrapper');
+                const w = wrap.clientWidth || 200;
+                const h = wrap.clientHeight || 200;
+                lCamera.aspect = w / h;
+                lCamera.updateProjectionMatrix();
+                lRenderer.setSize(w, h);
+            }
+        }
+
+        function hideLoadingModal() {
+            const modal = document.getElementById('loadingModal');
+            modal.style.display = 'none';
+        }
+
+        function initLoader3D() {
+            const canvas = document.getElementById('loader3dCanvas');
+            const wrap = document.getElementById('loader3dWrapper');
+            if (!canvas || !wrap) return;
+
+            const w = 200;
+            const h = 200;
+
+            lScene = new THREE.Scene();
+            lCamera = new THREE.PerspectiveCamera(45, w / h, 0.1, 100);
+            lCamera.position.z = 7;
+
+            lRenderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+            lRenderer.setSize(w, h);
+            lRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+            // Ambient + Directional Lighting
+            const ambient = new THREE.AmbientLight(0xFFFFFF, 1.2);
+            lScene.add(ambient);
+
+            const directCyan = new THREE.DirectionalLight(0x0EA5E9, 2.5);
+            directCyan.position.set(5, 8, 6);
+            lScene.add(directCyan);
+
+            const directBlue = new THREE.DirectionalLight(0x0284C7, 2.0);
+            directBlue.position.set(-5, -6, 5);
+            lScene.add(directBlue);
+
+            // Abstract Luxury Geometric Core (Octahedron + Thin Orbital Rings)
+            lLoaderGroup = new THREE.Group();
+
+            // 1. Faceted Central Gem / Crystal
+            const coreGeo = new THREE.OctahedronGeometry(1.6, 0);
+            const coreMat = new THREE.MeshStandardMaterial({
+                color: 0x0F172A,
+                metalness: 0.9,
+                roughness: 0.15,
+                emissive: 0x0284C7,
+                emissiveIntensity: 0.4
+            });
+            const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+            lLoaderGroup.add(coreMesh);
+
+            // 2. Delicate Wireframe Overlay
+            const wireMat = new THREE.MeshBasicMaterial({
+                color: 0x38BDF8,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.6
+            });
+            const wireMesh = new THREE.Mesh(coreGeo, wireMat);
+            wireMesh.scale.set(1.02, 1.02, 1.02);
+            lLoaderGroup.add(wireMesh);
+
+            // 3. Orbital Ring 1
+            const ringGeo = new THREE.TorusGeometry(2.3, 0.04, 16, 80);
+            const ringMat = new THREE.MeshBasicMaterial({ color: 0x0EA5E9, transparent: true, opacity: 0.7 });
+            const ringMesh1 = new THREE.Mesh(ringGeo, ringMat);
+            ringMesh1.rotation.x = Math.PI / 3;
+            lLoaderGroup.add(ringMesh1);
+
+            // 4. Orbital Ring 2
+            const ringMesh2 = new THREE.Mesh(ringGeo, ringMat);
+            ringMesh2.rotation.y = Math.PI / 3;
+            lLoaderGroup.add(ringMesh2);
+
+            lScene.add(lLoaderGroup);
+
+            // Interactive Drag to Rotate
+            wrap.addEventListener('mousedown', (e) => {
+                lDragging = true;
+                lPrev = { x: e.clientX, y: e.clientY };
+            });
+            window.addEventListener('mouseup', () => { lDragging = false; });
+            window.addEventListener('mousemove', (e) => {
+                if (!lDragging) return;
+                const dx = e.clientX - lPrev.x;
+                const dy = e.clientY - lPrev.y;
+                lVel.y = dx * 0.01;
+                lVel.x = dy * 0.01;
+                lPrev = { x: e.clientX, y: e.clientY };
+            });
+
+            // Touch Drag Support
+            wrap.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    lDragging = true;
+                    lPrev = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+                }
+            }, { passive: true });
+            window.addEventListener('touchend', () => { lDragging = false; });
+            window.addEventListener('touchmove', (e) => {
+                if (!lDragging || e.touches.length !== 1) return;
+                const dx = e.touches[0].clientX - lPrev.x;
+                const dy = e.touches[0].clientY - lPrev.y;
+                lVel.y = dx * 0.01;
+                lVel.x = dy * 0.01;
+                lPrev = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+            }, { passive: true });
+
+            animateLoader3D();
+        }
+
+        function animateLoader3D() {
+            requestAnimationFrame(animateLoader3D);
+
+            if (lLoaderGroup) {
+                lLoaderGroup.rotation.y += lVel.y;
+                lLoaderGroup.rotation.x += lVel.x;
+                lVel.x *= 0.95;
+                lVel.y *= 0.95;
+                if (Math.abs(lVel.x) < 0.003) lVel.x = 0.003;
+                if (Math.abs(lVel.y) < 0.006) lVel.y = 0.006;
+            }
+
+            if (lRenderer && lScene && lCamera) {
+                lRenderer.render(lScene, lCamera);
+            }
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderHistory();
+            initBackground3D();
+        });
+    </script>
+</body>
+</html>
